@@ -57,3 +57,12 @@ if __name__ == "__main__":
     # Escucha obligatoria en 0.0.0.0 para entornos en la nube
     uvicorn.run("main:app", host="0.0.0.0", port=puerto, reload=False)
 
+
+@app.get("/version", tags=["Sistema"])
+def consultar_version():
+    return {
+        "version": "1.2.0",
+        "descripcion": "API desplegada mediante Continuous Deployment desde GitHub",
+        "docente": "Lic. Ronald J. Villar Gonzales",
+        "institucion": "IES República Federal de Alemania - Chiclayo"
+    }
