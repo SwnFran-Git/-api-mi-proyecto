@@ -2,6 +2,18 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from os import getenv
 
+# --- main.py (Lectura de Variables de Entorno) ---
+from dotenv import load_dotenv
+
+
+
+
+
+
+
+
+
+
 app = FastAPI(title="API de Tareas")
 class Tarea(BaseModel):
  titulo: str
@@ -66,3 +78,22 @@ def consultar_version():
         "docente": "Lic. Ronald J. Villar Gonzales",
         "institucion": "IES República Federal de Alemania - Chiclayo"
     }
+
+
+
+# Carga las variables del archivo .env local si existe
+load_dotenv()
+
+SECRET_KEY = getenv("API_SECRET_KEY", "clave_por_defecto_insegura")
+MODO_DEBUG = getenv("MODO_DEBUG", "False")
+
+@app.get("/config-check", tags=["Seguridad"])
+
+def config_check():
+    return {
+        "modo_debug": MODO_DEBUG,
+        # Buena práctica: nunca reveles el valor completo del secreto en logs o endpoints
+        "clave_configurada": True if SECRET_KEY != "clave_por_defecto_insegura" else False,
+        "prefijo_clave": SECRET_KEY[:4] + "****"
+    }
+
