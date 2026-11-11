@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from os import getenv
 
 app = FastAPI(title="API de Tareas")
 class Tarea(BaseModel):
@@ -39,3 +40,20 @@ def eliminar(id: int):
  if id not in tareas:
     raise HTTPException(status_code=404, detail="Tarea no encontrada")
  del tareas[id]
+ # --- main.py (Endpoint Health Check) ---
+
+@app.get("/health", tags=["Sistema"])
+def health_check():
+    return {
+        "status": "online",
+        "ambiente": getenv("ENVIRONMENT", "desarrollo_local"),
+        "servidor": "FastAPI + Uvicorn Cloud"
+    }
+   
+if __name__ == "__main__":
+    import uvicorn
+    # Lee el puerto inyectado por el PaaS; si no existe, usa 8000 por defecto
+    puerto = int(getenv("PORT", 8000))
+    # Escucha obligatoria en 0.0.0.0 para entornos en la nube
+    uvicorn.run("main:app", host="0.0.0.0", port=puerto, reload=False)
+
