@@ -97,3 +97,11 @@ def config_check():
         "prefijo_clave": SECRET_KEY[:4] + "****"
     }
 
+
+
+# --- main.py (Endpoint con error intencional) ---
+@app.get("/simular-error", tags=["Diagnóstico"])
+def simular_error():
+    # División por cero: provocará una excepción no controlada
+    resultado = 10 / 0
+    return {"resultado": resultado}
