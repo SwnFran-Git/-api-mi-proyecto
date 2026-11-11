@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from os import getenv
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- main.py (Lectura de Variables de Entorno) ---
 from dotenv import load_dotenv
@@ -105,3 +106,17 @@ def simular_error():
     # División por cero: provocará una excepción no controlada
     resultado = 10 / 0
     return {"resultado": resultado}
+
+
+# Configuración de orígenes permitidos
+origins = [
+    "*",  # En fase de desarrollo/aprendizaje permite cualquier origen. En empresas se especifica el dominio exacto.
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
